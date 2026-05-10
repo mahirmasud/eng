@@ -1,37 +1,50 @@
 ```
 # Dependencies
+.venv/
+venv/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.venv/
-venv/
-env/
-.env
-.env.local
-.env.*
-.pytest_cache/
-.mypy_cache/
-.coverage
-coverage/
-htmlcov/
 
-# Build artifacts
-dist/
+# Build and distribution artifacts
 build/
+dist/
 *.egg-info/
+
+# Configuration and metadata
+*.cfg
+*.conf
+*.ini
 
 # Logs
 *.log
 
-# Editor/IDE
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Editors
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
 
-# OS
+# OS specific
 .DS_Store
 Thumbs.db
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Workspace metadata (since these appear to be generated/profiling files)
+workspace/metadata/
 ```
