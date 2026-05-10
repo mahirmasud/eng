@@ -1,0 +1,74 @@
+# Core Dependencies
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+polars>=0.19.0
+pyarrow>=14.0.0
+duckdb>=0.9.0
+
+# Deep Learning Framework
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+pytorch-lightning>=2.1.0
+torchrec>=0.7.0
+
+# Transformers and Embeddings
+transformers>=4.35.0
+sentence-transformers>=2.2.2
+tokenizers>=0.15.0
+
+# Vector Search and Indexing
+faiss-cpu>=1.7.4
+# faiss-gpu>=1.7.4  # Uncomment for GPU support
+hnswlib>=0.7.0
+# qdrant-client>=1.6.0  # Optional: for Qdrant local mode
+
+# Machine Learning
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# Data Processing and Utilities
+tqdm>=4.66.0
+click>=8.1.0
+pyyaml>=6.0.0
+jsonschema>=4.20.0
+python-dateutil>=2.8.2
+
+# Logging and Monitoring
+mlflow>=2.9.0
+loguru>=0.7.0
+rich>=13.7.0  # For beautiful terminal output
+
+# Configuration and Validation
+pydantic>=2.5.0
+hydra-core>=1.3.0
+
+# Parallel Processing
+ray[train]>=2.7.0  # Optional: for distributed training
+joblib>=1.3.0
+
+# Compression and File Handling
+zstandard>=0.21.0
+lz4>=4.3.0
+
+# Testing (development)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Development Tools (optional)
+# black>=23.11.0
+# isort>=5.12.0
+# flake8>=6.1.0
+# mypy>=1.7.0
+
+# Optional: GPU-specific dependencies
+# Uncomment below if using CUDA
+# nvidia-cuda-runtime-cu11>=11.8.0
+# nvidia-cudnn-cu11>=8.7.0
+
+# Optional: Experiment tracking
+# wandb>=0.16.0
+
+# Optional: Profiling
+# py-spy>=0.3.14
+# memory-profiler>=0.61.0
