@@ -1,0 +1,29 @@
+{
+  "user_features": [
+    {
+      "name": "age",
+      "dataset": "interactions.csv"
+    },
+    {
+      "name": "gender",
+      "dataset": "interactions.csv"
+    }
+  ],
+  "item_features": [
+    {
+      "name": "category",
+      "dataset": "interactions.csv"
+    },
+    {
+      "name": "title",
+      "dataset": "interactions.csv"
+    }
+  ],
+  "interaction_features": [
+    {
+      "name": "rating",
+      "dataset": "interactions.csv"
+    }
+  ],
+  "contextual_features": []
+}

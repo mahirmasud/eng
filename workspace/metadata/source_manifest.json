@@ -1,0 +1,14 @@
+{
+  "source_directory": "datasets",
+  "domain_pack": null,
+  "ingestion_timestamp": "2026-05-10T17:45:25.552867",
+  "total_files": 1,
+  "files": [
+    {
+      "original_path": "datasets/interactions.csv",
+      "workspace_path": "workspace/raw/interactions.parquet",
+      "file_type": "csv",
+      "size_bytes": 1414
+    }
+  ]
+}

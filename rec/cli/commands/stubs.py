@@ -1,4 +1,4 @@
-"""Stub commands for ML pipeline (placeholders for full implementation)."""
+"""Feature engineering command with full implementation using Featuretools."""
 
 import json
 from pathlib import Path
@@ -11,8 +11,10 @@ console = Console()
 
 @click.command("features")
 @click.option("--workspace", "-w", required=True, help="Path to workspace directory")
-def features(workspace: str):
-    """Feature engineering pipeline."""
+@click.option("--no-dfs", is_flag=True, help="Disable Deep Feature Synthesis (use basic features only)")
+@click.option("--max-features", "-m", default=100, help="Maximum number of features to generate")
+def features(workspace: str, no_dfs: bool, max_features: int):
+    """Feature engineering pipeline with automated feature generation."""
     console.print("\n[bold cyan]🔧 Running Feature Engineering[/bold cyan]\n")
     
     workspace_path = Path(workspace)
@@ -26,32 +28,110 @@ def features(workspace: str):
         console.print("[red]Error:[/red] No rec_config.json found. Run 'rec build-config' first.")
         return
     
-    with open(config_path, "r") as f:
-        config = json.load(f)
+    try:
+        from rec.core.feature_engineering import FeatureEngineeringEngine
+        
+        console.print("[green]✓[/green] Loading feature engineering engine...")
+        
+        # Initialize engine
+        engine = FeatureEngineeringEngine(workspace_path)
+        engine.load_metadata()
+        
+        console.print("[green]✓[/green] Metadata loaded")
+        console.print(f"  - Semantic roles: {len(engine.semantic_roles.get('column_roles', {}))} columns mapped")
+        console.print(f"  - Entity graph: {len(engine.entity_graph.get('entities', []))} entities")
+        
+        # Generate features
+        console.print("\n[bold]Generating features...[/bold]")
+        feature_matrix = engine.generate_features(use_featuretools=not no_dfs)
+        
+        console.print(f"[green]✓[/green] Generated {len(feature_matrix.columns)} features")
+        console.print(f"  - Samples: {len(feature_matrix)}")
+        
+        # Save features
+        output_path = engine.save_features()
+        console.print(f"[green]✓[/green] Features saved to: {output_path}")
+        
+        # Save metadata
+        metadata_path = engine.save_feature_metadata()
+        console.print(f"[green]✓[/green] Feature metadata saved to: {metadata_path}")
+        
+        # Display feature summary
+        console.print("\n[bold]Feature Summary:[/bold]")
+        numeric_cols = [c for c in feature_matrix.columns if str(feature_matrix[c].dtype) in ['Float32', 'Float64', 'Int32', 'Int64']]
+        categorical_cols = [c for c in feature_matrix.columns if str(feature_matrix[c].dtype) == 'Utf8']
+        
+        console.print(f"  - Numeric features: {len(numeric_cols)}")
+        console.print(f"  - Categorical features: {len(categorical_cols)}")
+        
+        if len(numeric_cols) > 0:
+            console.print("\n[dim]Sample numeric features:[/dim]")
+            for col in numeric_cols[:5]:
+                console.print(f"    • {col}")
+                
+        if len(categorical_cols) > 0:
+            console.print("\n[dim]Sample categorical features:[/dim]")
+            for col in categorical_cols[:5]:
+                console.print(f"    • {col}")
+        
+        console.print("\n[bold green]✓ Feature engineering complete![/bold green]")
+        console.print(f"\nNext step: [cyan]rec train-retrieval --workspace {workspace}[/cyan]")
+        
+    except ImportError as e:
+        console.print(f"[red]Error importing feature engineering module: {e}[/red]")
+        console.print("\n[yellow]⚠ Install featuretools for advanced feature generation:[/yellow]")
+        console.print("  pip install featuretools")
+        console.print("\n[dim]Falling back to basic feature generation...[/dim]")
+        
+        # Fallback to basic implementation
+        _run_basic_features(workspace_path)
+        
+    except Exception as e:
+        console.print(f"[red]Error during feature engineering: {e}[/red]")
+        import traceback
+        console.print(traceback.format_exc())
+
+
+def _run_basic_features(workspace_path: Path):
+    """Basic feature generation fallback without Featuretools."""
+    import polars as pl
     
-    console.print("[yellow]⚠ Feature engineering stub - full implementation pending[/yellow]")
-    console.print("\nThis command will:")
-    console.print("  - Generate user features")
-    console.print("  - Generate item features")
-    console.print("  - Generate interaction features")
-    console.print("  - Generate temporal features")
-    console.print("  - Generate session features")
-    console.print("  - Compute statistics and aggregations")
-    
-    # Create placeholder output
-    features_output = {
-        "user_features": [],
-        "item_features": [],
-        "interaction_features": [],
-        "statistics": {},
-    }
-    
-    output_path = workspace_path / "processed" / "features.parquet"
-    output_path.parent.mkdir(exist_ok=True)
-    
-    console.print(f"\n[dim]Placeholder features saved to: {output_path}[/dim]")
-    console.print("\n[bold green]✓ Features step complete (stub)[/bold green]")
-    console.print(f"\nNext step: [cyan]rec train-retrieval --workspace {workspace}[/cyan]")
+    try:
+        # Load data
+        possible_paths = [
+            workspace_path / "processed" / "interactions.parquet",
+            workspace_path / "raw" / "interactions.parquet",
+        ]
+        
+        df = None
+        for path in possible_paths:
+            if path.exists():
+                df = pl.read_parquet(path)
+                break
+                
+        if df is None:
+            csv_files = list((workspace_path / "raw").glob("*.csv"))
+            if csv_files:
+                df = pl.read_csv(csv_files[0])
+                
+        if df is None:
+            console.print("[red]Error:[/red] No data found")
+            return
+            
+        # Add basic features
+        df = df.with_columns([
+            pl.lit(1).alias("bias"),
+        ])
+        
+        # Save
+        output_path = workspace_path / "processed" / "features.parquet"
+        output_path.parent.mkdir(exist_ok=True)
+        df.write_parquet(output_path)
+        
+        console.print(f"[green]✓[/green] Basic features saved to: {output_path}")
+        
+    except Exception as e:
+        console.print(f"[red]Error in basic feature generation: {e}[/red]")
 
 
 @click.command("train-retrieval")
