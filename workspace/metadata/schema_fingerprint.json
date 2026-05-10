@@ -1,0 +1,18 @@
+{
+  "schemas": {
+    "interactions.csv": {
+      "columns": [
+        "age:Int64",
+        "category:String",
+        "gender:String",
+        "item_id:Int64",
+        "rating:Int64",
+        "timestamp:Int64",
+        "title:String",
+        "user_id:Int64"
+      ],
+      "row_count": 30
+    }
+  },
+  "hash": "b2a109c983a5581b"
+}

@@ -162,18 +162,29 @@ Generates `workspace/rec_config.json` with:
 rec features --workspace ./workspace
 ```
 
-Automatically generates:
-- User features (aggregations, statistics)
-- Item features (popularity, categories)
-- Interaction features (frequency, recency)
-- Temporal features (hour, day, season)
-- Session features (sequence, duration)
-- Graph features (connectivity, centrality)
+Automatically generates features using **Featuretools** for Deep Feature Synthesis:
+- User features (aggregations, statistics, behavioral patterns)
+- Item features (popularity, categories, temporal attributes)
+- Interaction features (frequency, recency, user-item history)
+- Temporal features (hour, day, season, business hours)
+- Session features (sequence, duration, position)
+- Graph features (connectivity, centrality - when applicable)
+
+Uses automated feature engineering to create hundreds of meaningful features through:
+- Aggregation primitives: count, mean, sum, std, min, max
+- Transformation primitives: absolute, divide, multiply, time-based extracts
+- Cross-entity features via relationship traversal
+
+**Options:**
+```bash
+rec features --workspace ./workspace --no-dfs  # Skip deep feature synthesis
+rec features --workspace ./workspace --max-features 200  # Limit features
+```
 
 **Output:**
-- `workspace/features/user_features.parquet`
-- `workspace/features/item_features.parquet`
-- `workspace/features/interaction_features.parquet`
+- `workspace/processed/features.parquet` - Complete feature matrix
+- `workspace/metadata/feature_metadata.json` - Feature statistics and descriptions
+- `workspace/metadata/feature_specs.json` - Feature specifications
 
 ### Step 8: Train Retrieval Model (Three-Tower)
 
@@ -401,6 +412,34 @@ workspace/
 ```
 
 ## 🔧 Advanced Configuration
+
+### Feature Engineering Options
+
+The `rec features` command supports several options for controlling feature generation:
+
+```bash
+# Use basic features only (skip Deep Feature Synthesis)
+rec features --workspace ./workspace --no-dfs
+
+# Limit maximum number of features generated
+rec features --workspace ./workspace --max-features 200
+
+# Full feature generation with DFS (default)
+rec features --workspace ./workspace
+```
+
+**Feature Generation Strategies:**
+
+1. **Basic Features**: Fast generation using Polars aggregations and transformations
+   - User/item statistics
+   - Temporal extractions
+   - Session metrics
+   
+2. **Deep Feature Synthesis**: Comprehensive feature generation using Featuretools
+   - Cross-entity aggregations
+   - Relationship-based features
+   - Automated feature combinations
+   - Typically generates 50-200+ features
 
 ### Custom Domain Pack
 

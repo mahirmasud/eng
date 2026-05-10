@@ -1,4 +1,7 @@
 ```
+# Data files
+*.parquet
+
 # Dependencies
 .venv/
 venv/
@@ -7,20 +10,16 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Build and distribution artifacts
+# Build artifacts
 build/
 dist/
 *.egg-info/
 
-# Configuration and metadata
-*.cfg
-*.conf
-*.ini
-
-# Logs
+# Logs and temp files
 *.log
+*.tmp
 
-# Environment files
+# Environment
 .env
 .env.local
 *.env.*
@@ -28,23 +27,8 @@ dist/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# OS specific
+# OS
 .DS_Store
 Thumbs.db
-
-# Coverage reports
-.coverage
-htmlcov/
-coverage/
-
-# Python cache
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Workspace metadata (since these appear to be generated/profiling files)
-workspace/metadata/
 ```

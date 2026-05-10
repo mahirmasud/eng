@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "id": "interactions.csv:user_id",
+      "type": "USER_ID",
+      "dataset": "interactions.csv"
+    },
+    {
+      "id": "interactions.csv:item_id",
+      "type": "ITEM_ID",
+      "dataset": "interactions.csv"
+    }
+  ],
+  "edges": [
+    {
+      "source": "user",
+      "target": "item",
+      "signal_column": "rating",
+      "dataset": "interactions.csv"
+    }
+  ]
+}

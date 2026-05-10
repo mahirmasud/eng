@@ -1,0 +1,83 @@
+{
+  "profiles": [
+    {
+      "file_name": "interactions.csv",
+      "file_type": "csv",
+      "num_rows": 30,
+      "num_columns": 8,
+      "columns": [
+        {
+          "name": "user_id",
+          "dtype": "Int64",
+          "null_count": 0,
+          "unique_count": 10
+        },
+        {
+          "name": "item_id",
+          "dtype": "Int64",
+          "null_count": 0,
+          "unique_count": 15
+        },
+        {
+          "name": "rating",
+          "dtype": "Int64",
+          "null_count": 0,
+          "unique_count": 3
+        },
+        {
+          "name": "timestamp",
+          "dtype": "Int64",
+          "null_count": 0,
+          "unique_count": 30
+        },
+        {
+          "name": "age",
+          "dtype": "Int64",
+          "null_count": 0,
+          "unique_count": 10
+        },
+        {
+          "name": "gender",
+          "dtype": "String",
+          "null_count": 0,
+          "unique_count": 2
+        },
+        {
+          "name": "category",
+          "dtype": "String",
+          "null_count": 0,
+          "unique_count": 5
+        },
+        {
+          "name": "title",
+          "dtype": "String",
+          "null_count": 0,
+          "unique_count": 15
+        }
+      ],
+      "semantic_candidates": [
+        {
+          "column": "user_id",
+          "semantic_type": "USER_ID"
+        },
+        {
+          "column": "item_id",
+          "semantic_type": "ITEM_ID"
+        },
+        {
+          "column": "rating",
+          "semantic_type": "INTERACTION_SIGNAL"
+        },
+        {
+          "column": "timestamp",
+          "semantic_type": "TEMPORAL"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_datasets": 1,
+    "total_rows": 30,
+    "total_columns": 8
+  }
+}

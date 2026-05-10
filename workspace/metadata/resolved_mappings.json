@@ -1,0 +1,348 @@
+{
+  "datasets": [
+    {
+      "dataset": "interactions.csv",
+      "mappings": [
+        {
+          "column": "user_id",
+          "dtype": "Int64",
+          "best_match": {
+            "role": "USER_ID",
+            "confidence": 0.7
+          },
+          "top_matches": [
+            {
+              "role": "USER_ID",
+              "score": 0.7
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            },
+            {
+              "role": "SESSION",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "rule-match:1.00",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "item_id",
+          "dtype": "Int64",
+          "best_match": {
+            "role": "ITEM_ID",
+            "confidence": 0.7
+          },
+          "top_matches": [
+            {
+              "role": "ITEM_ID",
+              "score": 0.7
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            },
+            {
+              "role": "SESSION",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "rule-match:1.00",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "rating",
+          "dtype": "Int64",
+          "best_match": {
+            "role": "INTERACTION_SIGNAL",
+            "confidence": 0.567
+          },
+          "top_matches": [
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.567
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            },
+            {
+              "role": "SESSION",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "rule-match:0.81",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "timestamp",
+          "dtype": "Int64",
+          "best_match": {
+            "role": "TEMPORAL",
+            "confidence": 0.504
+          },
+          "top_matches": [
+            {
+              "role": "TEMPORAL",
+              "score": 0.504
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "SESSION",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "rule-match:0.72",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "age",
+          "dtype": "Int64",
+          "best_match": {
+            "role": "USER_FEATURE",
+            "confidence": 0.44099999999999995
+          },
+          "top_matches": [
+            {
+              "role": "USER_FEATURE",
+              "score": 0.44099999999999995
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "rule-match:0.63"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "gender",
+          "dtype": "String",
+          "best_match": {
+            "role": "USER_FEATURE",
+            "confidence": 0.44099999999999995
+          },
+          "top_matches": [
+            {
+              "role": "USER_FEATURE",
+              "score": 0.44099999999999995
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "low-confidence",
+            "USER_FEATURE": "rule-match:0.63"
+          },
+          "status": "duplicate"
+        },
+        {
+          "column": "category",
+          "dtype": "String",
+          "best_match": {
+            "role": "ITEM_FEATURE",
+            "confidence": 0.44099999999999995
+          },
+          "top_matches": [
+            {
+              "role": "ITEM_FEATURE",
+              "score": 0.44099999999999995
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "rule-match:0.63",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "assigned"
+        },
+        {
+          "column": "title",
+          "dtype": "String",
+          "best_match": {
+            "role": "ITEM_FEATURE",
+            "confidence": 0.44099999999999995
+          },
+          "top_matches": [
+            {
+              "role": "ITEM_FEATURE",
+              "score": 0.44099999999999995
+            },
+            {
+              "role": "USER_ID",
+              "score": 0.0
+            },
+            {
+              "role": "ITEM_ID",
+              "score": 0.0
+            },
+            {
+              "role": "INTERACTION_SIGNAL",
+              "score": 0.0
+            },
+            {
+              "role": "TEMPORAL",
+              "score": 0.0
+            }
+          ],
+          "reasoning": {
+            "USER_ID": "low-confidence",
+            "ITEM_ID": "low-confidence",
+            "INTERACTION_SIGNAL": "low-confidence",
+            "TEMPORAL": "low-confidence",
+            "SESSION": "low-confidence",
+            "CONTEXTUAL": "low-confidence",
+            "ITEM_FEATURE": "rule-match:0.63",
+            "USER_FEATURE": "low-confidence"
+          },
+          "status": "duplicate"
+        }
+      ]
+    }
+  ],
+  "global_integrity": {
+    "user_id_assigned": true,
+    "item_id_assigned": true,
+    "interaction_signal_assigned": false
+  },
+  "conflicts_resolved": 0,
+  "summary": {
+    "total_datasets": 1,
+    "total_columns_mapped": 8,
+    "critical_roles_found": 2
+  }
+}

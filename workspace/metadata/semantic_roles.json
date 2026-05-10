@@ -1,0 +1,62 @@
+{
+  "roles": {
+    "IDENTITY": [
+      {
+        "dataset": "interactions.csv",
+        "column": "user_id",
+        "role_type": "USER_ID"
+      },
+      {
+        "dataset": "interactions.csv",
+        "column": "item_id",
+        "role_type": "ITEM_ID"
+      }
+    ],
+    "SIGNAL": [
+      {
+        "dataset": "interactions.csv",
+        "column": "rating"
+      }
+    ],
+    "FEATURE": [
+      {
+        "dataset": "interactions.csv",
+        "column": "age",
+        "feature_type": "USER_FEATURE"
+      },
+      {
+        "dataset": "interactions.csv",
+        "column": "gender",
+        "feature_type": "USER_FEATURE"
+      },
+      {
+        "dataset": "interactions.csv",
+        "column": "category",
+        "feature_type": "ITEM_FEATURE"
+      },
+      {
+        "dataset": "interactions.csv",
+        "column": "title",
+        "feature_type": "ITEM_FEATURE"
+      }
+    ],
+    "EVENT": [],
+    "SESSION": [],
+    "TEMPORAL": [
+      {
+        "dataset": "interactions.csv",
+        "column": "timestamp"
+      }
+    ],
+    "CONTEXTUAL": []
+  },
+  "summary": {
+    "IDENTITY": 2,
+    "SIGNAL": 1,
+    "FEATURE": 4,
+    "EVENT": 0,
+    "SESSION": 0,
+    "TEMPORAL": 1,
+    "CONTEXTUAL": 0
+  }
+}
