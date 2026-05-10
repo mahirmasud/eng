@@ -1,0 +1,31 @@
+user_id,item_id,rating,timestamp,age,gender,category,title
+1,101,5,1609459200,25,M,Electronics,Laptop Pro
+1,102,4,1609459300,25,M,Electronics,Wireless Mouse
+1,103,3,1609459400,25,M,Books,Python Guide
+2,101,4,1609459500,32,F,Electronics,Laptop Pro
+2,104,5,1609459600,32,F,Clothing,Winter Jacket
+2,105,4,1609459700,32,F,Books,Data Science Handbook
+3,102,5,1609459800,28,M,Electronics,Wireless Mouse
+3,103,4,1609459900,28,M,Books,Python Guide
+3,106,3,1609460000,28,M,Electronics,USB Hub
+4,104,5,1609460100,45,F,Clothing,Winter Jacket
+4,107,4,1609460200,45,F,Home,Coffee Maker
+4,108,5,1609460300,45,F,Books,Cooking Basics
+5,101,3,1609460400,22,M,Electronics,Laptop Pro
+5,109,4,1609460500,22,M,Sports,Running Shoes
+5,110,5,1609460600,22,M,Electronics,Headphones
+6,105,5,1609460700,35,F,Books,Data Science Handbook
+6,103,4,1609460800,35,F,Books,Python Guide
+6,111,3,1609460900,35,F,Home,Desk Lamp
+7,106,4,1609461000,40,M,Electronics,USB Hub
+7,102,5,1609461100,40,M,Electronics,Wireless Mouse
+7,112,4,1609461200,40,M,Sports,Yoga Mat
+8,107,5,1609461300,50,F,Home,Coffee Maker
+8,108,4,1609461400,50,F,Books,Cooking Basics
+8,113,5,1609461500,50,F,Home,Blender
+9,109,4,1609461600,27,M,Sports,Running Shoes
+9,110,5,1609461700,27,M,Electronics,Headphones
+9,114,3,1609461800,27,M,Clothing,T-Shirt
+10,111,5,1609461900,38,F,Home,Desk Lamp
+10,104,4,1609462000,38,F,Clothing,Winter Jacket
+10,115,5,1609462100,38,F,Books,Art History

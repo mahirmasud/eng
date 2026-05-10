@@ -1,0 +1,268 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-10T17:45:45.091746",
+  "workspace_schema_version": "0.1.0",
+  "entity_mappings": {
+    "user_id": {
+      "column": "user_id",
+      "dataset": "interactions.csv"
+    },
+    "item_id": {
+      "column": "item_id",
+      "dataset": "interactions.csv"
+    },
+    "interaction_signal": {
+      "column": "rating",
+      "dataset": "interactions.csv"
+    },
+    "temporal": [
+      {
+        "column": "timestamp",
+        "dataset": "interactions.csv"
+      }
+    ],
+    "session": [],
+    "contextual": []
+  },
+  "feature_roles": {
+    "user_features": [
+      "age",
+      "gender"
+    ],
+    "item_features": [
+      "category",
+      "title"
+    ],
+    "interaction_features": [
+      "rating"
+    ],
+    "context_features": []
+  },
+  "retrieval": {
+    "enabled": true,
+    "model_type": "three_tower",
+    "embedding_dim": 384,
+    "num_candidates": 100,
+    "ann_index": {
+      "type": "faiss",
+      "index_type": "IVF1024,PQ64",
+      "nprobe": 32,
+      "use_gpu": false
+    },
+    "similarity_metric": "cosine"
+  },
+  "ranking": {
+    "enabled": true,
+    "model_type": "mlp_ranker",
+    "hidden_layers": [
+      256,
+      128,
+      64
+    ],
+    "dropout": 0.1,
+    "activation": "relu",
+    "features": {
+      "user_features": [
+        "age",
+        "gender"
+      ],
+      "item_features": [
+        "category",
+        "title"
+      ],
+      "context_features": [],
+      "interaction_features": [
+        "rating"
+      ]
+    }
+  },
+  "dlrm": {
+    "enabled": true,
+    "dense_arch": {
+      "hidden_layers": [
+        512,
+        256,
+        128
+      ],
+      "activation": "relu",
+      "dropout": 0.1
+    },
+    "sparse_arch": {
+      "embedding_dim": 64,
+      "num_embeddings": {}
+    },
+    "interaction_layer": {
+      "type": "dot_interaction",
+      "num_interactions": "auto"
+    },
+    "prediction_head": {
+      "hidden_layers": [
+        256,
+        128,
+        64,
+        1
+      ],
+      "activation": "relu",
+      "output_activation": "sigmoid"
+    }
+  },
+  "vector_index": {
+    "type": "faiss",
+    "index_params": {
+      "nlist": 1024,
+      "m": 64,
+      "nbits": 8
+    },
+    "training_params": {
+      "min_points_per_cluster": 256,
+      "max_training_points": 1000000
+    },
+    "metadata_filtering": true
+  },
+  "training": {
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "weight_decay": 1e-05,
+    "num_epochs": 10,
+    "early_stopping": {
+      "enabled": true,
+      "patience": 3,
+      "min_delta": 0.0001
+    },
+    "optimizer": "adamw",
+    "scheduler": {
+      "type": "cosine_annealing",
+      "warmup_epochs": 1
+    },
+    "mixed_precision": true,
+    "gradient_accumulation_steps": 1
+  },
+  "cold_start": {
+    "enabled": true,
+    "strategies": {
+      "new_users": {
+        "method": "popularity_prior",
+        "fallback_items": 50,
+        "content_based": true
+      },
+      "new_items": {
+        "method": "content_embedding",
+        "similarity_threshold": 0.7,
+        "boost_factor": 1.2
+      },
+      "sparse_interactions": {
+        "method": "hybrid",
+        "min_interactions": 5,
+        "confidence_decay": 0.9
+      }
+    },
+    "metadata_embedding_model": "all-MiniLM-L6-v2"
+  },
+  "feedback": {
+    "enabled": true,
+    "signal_types": {
+      "click": {
+        "weight": 1.0,
+        "decay_days": 30
+      },
+      "view": {
+        "weight": 0.5,
+        "decay_days": 14
+      },
+      "purchase": {
+        "weight": 5.0,
+        "decay_days": 90
+      },
+      "rating": {
+        "weight": 2.0,
+        "decay_days": 60
+      },
+      "dwell_time": {
+        "weight": 1.5,
+        "decay_days": 30
+      }
+    },
+    "negative_sampling": {
+      "enabled": true,
+      "ratio": 4.0,
+      "strategy": "in_batch"
+    },
+    "replay_buffer": {
+      "enabled": true,
+      "max_size": 1000000,
+      "sample_ratio": 0.2
+    }
+  },
+  "reranking": {
+    "enabled": true,
+    "diversity": {
+      "enabled": true,
+      "algorithm": "mmr",
+      "lambda_param": 0.5
+    },
+    "novelty": {
+      "enabled": true,
+      "penalize_seen": true,
+      "time_window_days": 30
+    },
+    "freshness": {
+      "enabled": true,
+      "boost_new_items": true,
+      "decay_days": 7
+    },
+    "business_rules": {
+      "enabled": true,
+      "rules_file": "domain_pack/rules.yaml"
+    },
+    "fairness": {
+      "enabled": false,
+      "constraints": []
+    }
+  },
+  "evaluation": {
+    "metrics": [
+      "recall@10",
+      "recall@50",
+      "precision@10",
+      "precision@50",
+      "ndcg@10",
+      "map@10",
+      "mrr",
+      "coverage",
+      "diversity"
+    ],
+    "split_strategy": {
+      "type": "temporal",
+      "train_ratio": 0.7,
+      "val_ratio": 0.15,
+      "test_ratio": 0.15
+    },
+    "offline_evaluation": true,
+    "online_ab_testing_ready": false
+  },
+  "monitoring": {
+    "mlflow_tracking": true,
+    "experiment_name": "rec_engine_experiment",
+    "log_params": true,
+    "log_metrics": true,
+    "log_models": true,
+    "drift_detection": {
+      "enabled": true,
+      "schema_drift": true,
+      "embedding_drift": true,
+      "threshold": 0.1
+    }
+  },
+  "export": {
+    "formats": [
+      "onnx",
+      "torchscript",
+      "saved_model"
+    ],
+    "include_metadata": true,
+    "quantization": {
+      "enabled": false,
+      "method": "dynamic"
+    }
+  }
+}
