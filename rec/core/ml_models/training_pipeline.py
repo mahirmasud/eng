@@ -145,13 +145,13 @@ class TrainingPipeline:
         callbacks = [
             ModelCheckpoint(
                 dirpath=self.models_dir / "retrieval",
-                filename="three_tower-{epoch:02d}-{val_loss:.4f}",
-                monitor="val_loss",
+                filename="three_tower-{epoch:02d}-{train_loss:.4f}",
+                monitor="train_loss_epoch",
                 mode="min",
                 save_top_k=3,
             ),
             EarlyStopping(
-                monitor="val_loss",
+                monitor="train_loss_epoch",
                 patience=training_config.get("early_stopping", {}).get("patience", 3),
                 mode="min",
             ),
@@ -166,7 +166,7 @@ class TrainingPipeline:
             max_epochs=epochs,
             accelerator="gpu" if gpu else "cpu",
             devices=1,
-            batch_size=batch_size,
+            # batch_size argument removed (handled via DataLoader)
             callbacks=callbacks,
             logger=logger,
             gradient_clip_val=1.0,
@@ -288,8 +288,8 @@ class TrainingPipeline:
         callbacks = [
             ModelCheckpoint(
                 dirpath=self.models_dir / "dlrm",
-                filename="dlrm-{epoch:02d}-{val_loss:.4f}",
-                monitor="val_loss",
+                filename="dlrm-{epoch:02d}-{train_loss:.4f}",
+                monitor="train_loss_epoch",
                 mode="min",
                 save_top_k=3,
             ),
@@ -421,8 +421,8 @@ class TrainingPipeline:
         callbacks = [
             ModelCheckpoint(
                 dirpath=self.models_dir / "ranker",
-                filename="ranker-{epoch:02d}-{val_loss:.4f}",
-                monitor="val_loss",
+                filename="ranker-{epoch:02d}-{train_loss:.4f}",
+                monitor="train_loss_epoch",
                 mode="min",
                 save_top_k=3,
             ),
