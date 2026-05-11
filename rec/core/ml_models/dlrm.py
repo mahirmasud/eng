@@ -322,12 +322,12 @@ class DLRMDataset(Dataset):
     
     def __getitem__(self, idx: int):
         batch = {
-            "dense_features": self.dense_features[idx],
-            "labels": self.labels[idx],
+            "dense_features": torch.FloatTensor(self.dense_features[idx]),
+            "labels": torch.tensor(self.labels[idx], dtype=torch.float32),
         }
         
         for key, value in self.sparse_features.items():
-            batch[f"sparse_{key}"] = value[idx]
+            batch[f"sparse_{key}"] = torch.tensor(value[idx], dtype=torch.long)
             
         return batch
 
