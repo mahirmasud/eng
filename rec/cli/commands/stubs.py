@@ -1,4 +1,4 @@
-"""Feature engineering command with full implementation using Featuretools."""
+"""Training commands with full implementation."""
 
 import json
 from pathlib import Path
@@ -138,7 +138,8 @@ def _run_basic_features(workspace_path: Path):
 @click.option("--workspace", "-w", required=True, help="Path to workspace directory")
 @click.option("--epochs", "-e", default=10, help="Number of training epochs")
 @click.option("--batch-size", "-b", default=2048, help="Batch size")
-def train_retrieval(workspace: str, epochs: int, batch_size: int):
+@click.option("--gpu", is_flag=True, help="Use GPU for training")
+def train_retrieval(workspace: str, epochs: int, batch_size: int, gpu: bool):
     """Train three-tower retrieval model."""
     console.print("\n[bold cyan]🎯 Training Retrieval Model (Three-Tower)[/bold cyan]\n")
     
@@ -153,30 +154,52 @@ def train_retrieval(workspace: str, epochs: int, batch_size: int):
         console.print("[red]Error:[/red] No rec_config.json found. Run 'rec build-config' first.")
         return
     
-    with open(config_path, "r") as f:
-        config = json.load(f)
-    
-    console.print(f"Configuration loaded:")
-    console.print(f"  - Epochs: {epochs}")
-    console.print(f"  - Batch size: {batch_size}")
-    console.print(f"  - Embedding dim: {config.get('retrieval', {}).get('embedding_dim', 384)}")
-    
-    console.print("\n[yellow]⚠ Three-tower training stub - full implementation pending[/yellow]")
-    console.print("\nThis command will:")
-    console.print("  - Initialize User Tower")
-    console.print("  - Initialize Item Tower")
-    console.print("  - Initialize Candidate Tower")
-    console.print("  - Train with contrastive loss")
-    console.print("  - Generate user and item embeddings")
-    
-    console.print("\n[bold green]✓ Retrieval training complete (stub)[/bold green]")
-    console.print(f"\nNext step: [cyan]rec train-ranker --workspace {workspace}[/cyan]")
+    try:
+        from rec.core.ml_models.training_pipeline import TrainingPipeline
+        
+        console.print("[green]✓[/green] Loading training pipeline...")
+        
+        # Initialize pipeline
+        pipeline = TrainingPipeline(str(workspace_path))
+        
+        console.print("[green]✓[/green] Configuration loaded")
+        console.print(f"  - Epochs: {epochs}")
+        console.print(f"  - Batch size: {batch_size}")
+        console.print(f"  - Device: {'GPU' if gpu else 'CPU'}")
+        
+        # Train retrieval model
+        model = pipeline.train_retrieval(
+            epochs=epochs,
+            batch_size=batch_size,
+            gpu=gpu,
+        )
+        
+        console.print("\n[bold green]✓ Retrieval training complete![/bold green]")
+        console.print(f"\nNext step: [cyan]rec train-ranker --workspace {workspace}[/cyan]")
+        
+    except ImportError as e:
+        console.print(f"[red]Error importing training module: {e}[/red]")
+        console.print("\n[yellow]⚠ Ensure all dependencies are installed:[/yellow]")
+        console.print("  pip install torch pytorch-lightning sentence-transformers")
+        
+    except FileNotFoundError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        console.print("\n[yellow]Run feature engineering first:[/yellow]")
+        console.print(f"  rec features --workspace {workspace}")
+        
+    except Exception as e:
+        console.print(f"[red]Error during training: {e}[/red]")
+        import traceback
+        console.print(traceback.format_exc())
 
 
 @click.command("train-ranker")
 @click.option("--workspace", "-w", required=True, help="Path to workspace directory")
 @click.option("--epochs", "-e", default=10, help="Number of training epochs")
-def train_ranker(workspace: str, epochs: int):
+@click.option("--batch-size", "-b", default=512, help="Batch size")
+@click.option("--gpu", is_flag=True, help="Use GPU for training")
+@click.option("--ranking-loss", "-l", default="bpr", help="Ranking loss function (bpr, hinge, softmax)")
+def train_ranker(workspace: str, epochs: int, batch_size: int, gpu: bool, ranking_loss: str):
     """Train ranking model."""
     console.print("\n[bold cyan]📊 Training Ranking Model[/bold cyan]\n")
     
@@ -191,27 +214,53 @@ def train_ranker(workspace: str, epochs: int):
         console.print("[red]Error:[/red] No rec_config.json found. Run 'rec build-config' first.")
         return
     
-    with open(config_path, "r") as f:
-        config = json.load(f)
-    
-    console.print(f"Configuration loaded:")
-    console.print(f"  - Epochs: {epochs}")
-    console.print(f"  - Model: {config.get('ranking', {}).get('model_type', 'mlp_ranker')}")
-    
-    console.print("\n[yellow]⚠ Ranker training stub - full implementation pending[/yellow]")
-    console.print("\nThis command will:")
-    console.print("  - Build MLP ranking model")
-    console.print("  - Train on positive/negative pairs")
-    console.print("  - Optimize for ranking metrics")
-    
-    console.print("\n[bold green]✓ Ranker training complete (stub)[/bold green]")
-    console.print(f"\nNext step: [cyan]rec train-dlrm --workspace {workspace}[/cyan]")
+    try:
+        from rec.core.ml_models.training_pipeline import TrainingPipeline
+        
+        console.print("[green]✓[/green] Loading training pipeline...")
+        
+        # Initialize pipeline
+        pipeline = TrainingPipeline(str(workspace_path))
+        
+        console.print("[green]✓[/green] Configuration loaded")
+        console.print(f"  - Epochs: {epochs}")
+        console.print(f"  - Batch size: {batch_size}")
+        console.print(f"  - Ranking loss: {ranking_loss}")
+        console.print(f"  - Device: {'GPU' if gpu else 'CPU'}")
+        
+        # Train ranker model
+        model = pipeline.train_ranker(
+            epochs=epochs,
+            batch_size=batch_size,
+            gpu=gpu,
+            ranking_loss=ranking_loss,
+        )
+        
+        console.print("\n[bold green]✓ Ranker training complete![/bold green]")
+        console.print(f"\nNext step: [cyan]rec train-dlrm --workspace {workspace}[/cyan]")
+        
+    except ImportError as e:
+        console.print(f"[red]Error importing training module: {e}[/red]")
+        console.print("\n[yellow]⚠ Ensure all dependencies are installed:[/yellow]")
+        console.print("  pip install torch pytorch-lightning")
+        
+    except FileNotFoundError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        console.print("\n[yellow]Run feature engineering first:[/yellow]")
+        console.print(f"  rec features --workspace {workspace}")
+        
+    except Exception as e:
+        console.print(f"[red]Error during training: {e}[/red]")
+        import traceback
+        console.print(traceback.format_exc())
 
 
 @click.command("train-dlrm")
 @click.option("--workspace", "-w", required=True, help="Path to workspace directory")
 @click.option("--epochs", "-e", default=10, help="Number of training epochs")
-def train_dlrm(workspace: str, epochs: int):
+@click.option("--batch-size", "-b", default=1024, help="Batch size")
+@click.option("--gpu", is_flag=True, help="Use GPU for training")
+def train_dlrm(workspace: str, epochs: int, batch_size: int, gpu: bool):
     """Train DLRM model."""
     console.print("\n[bold cyan]🧠 Training DLRM Model[/bold cyan]\n")
     
@@ -226,23 +275,51 @@ def train_dlrm(workspace: str, epochs: int):
         console.print("[red]Error:[/red] No rec_config.json found. Run 'rec build-config' first.")
         return
     
-    with open(config_path, "r") as f:
-        config = json.load(f)
-    
-    console.print(f"Configuration loaded:")
-    console.print(f"  - Epochs: {epochs}")
-    console.print(f"  - Dense arch: {config.get('dlrm', {}).get('dense_arch', {})}")
-    console.print(f"  - Sparse arch: {config.get('dlrm', {}).get('sparse_arch', {})}")
-    
-    console.print("\n[yellow]⚠ DLRM training stub - full implementation pending[/yellow]")
-    console.print("\nThis command will:")
-    console.print("  - Initialize embedding tables")
-    console.print("  - Build dense and sparse architectures")
-    console.print("  - Train interaction layers")
-    console.print("  - Optimize prediction head")
-    
-    console.print("\n[bold green]✓ DLRM training complete (stub)[/bold green]")
-    console.print(f"\nNext step: [cyan]rec build-index --workspace {workspace}[/cyan]")
+    try:
+        from rec.core.ml_models.training_pipeline import TrainingPipeline
+        
+        console.print("[green]✓[/green] Loading training pipeline...")
+        
+        # Initialize pipeline
+        pipeline = TrainingPipeline(str(workspace_path))
+        
+        # Get config for display
+        with open(config_path, "r") as f:
+            config = json.load(f)
+        
+        dlrm_config = config.get("dlrm", {})
+        
+        console.print("[green]✓[/green] Configuration loaded")
+        console.print(f"  - Epochs: {epochs}")
+        console.print(f"  - Batch size: {batch_size}")
+        console.print(f"  - Dense arch: {dlrm_config.get('dense_arch', {})}")
+        console.print(f"  - Sparse arch: {dlrm_config.get('sparse_arch', {})}")
+        console.print(f"  - Device: {'GPU' if gpu else 'CPU'}")
+        
+        # Train DLRM model
+        model = pipeline.train_dlrm(
+            epochs=epochs,
+            batch_size=batch_size,
+            gpu=gpu,
+        )
+        
+        console.print("\n[bold green]✓ DLRM training complete![/bold green]")
+        console.print(f"\nNext step: [cyan]rec build-index --workspace {workspace}[/cyan]")
+        
+    except ImportError as e:
+        console.print(f"[red]Error importing training module: {e}[/red]")
+        console.print("\n[yellow]⚠ Ensure all dependencies are installed:[/yellow]")
+        console.print("  pip install torch pytorch-lightning")
+        
+    except FileNotFoundError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        console.print("\n[yellow]Run feature engineering first:[/yellow]")
+        console.print(f"  rec features --workspace {workspace}")
+        
+    except Exception as e:
+        console.print(f"[red]Error during training: {e}[/red]")
+        import traceback
+        console.print(traceback.format_exc())
 
 
 @click.command("build-index")

@@ -196,27 +196,47 @@ rec train-retrieval \
   --gpu  # Optional: use GPU
 ```
 
-Trains user, item, and candidate towers for semantic retrieval.
+Trains user, item, and candidate towers for semantic retrieval using contrastive loss with in-batch negatives.
+
+**Architecture:**
+- **User Tower**: MLP with user features + ID embeddings + text embeddings
+- **Item Tower**: MLP with item features + ID embeddings + text embeddings  
+- **Candidate Tower**: Context-aware scoring (optional)
+
+**Training:**
+- Contrastive loss with symmetric cross-entropy
+- In-batch negative sampling
+- Cosine similarity for retrieval
+- L2 normalized embeddings
 
 **Output:**
-- `workspace/models/retrieval_user_tower.pt`
-- `workspace/models/retrieval_item_tower.pt`
-- `workspace/models/retrieval_candidate_tower.pt`
+- `workspace/models/retrieval/three_tower.pt`
+- `workspace/models/retrieval/config.json`
+- Training logs with recall@10 metrics
 
 ### Step 9: Train Ranking Model
 
 ```bash
 rec train-ranker \
   --workspace ./workspace \
-  --epochs 5 \
+  --epochs 10 \
   --batch-size 512 \
-  --gpu
+  --gpu \
+  --ranking-loss bpr  # Options: bpr, hinge, softmax
 ```
 
-Trains pairwise/listwise ranking model for candidate scoring.
+Trains pairwise/listwise ranking model for candidate re-scoring.
+
+**Architecture:**
+- MLP scoring network with LayerNorm and dropout
+- Multiple loss functions supported:
+  - **BPR**: Bayesian Personalized Ranking
+  - **Hinge**: Margin-based ranking
+  - **Softmax**: Listwise cross-entropy
 
 **Output:**
-- `workspace/models/ranker.pt`
+- `workspace/models/ranker/ranker.pt`
+- `workspace/models/ranker/config.json`
 
 ### Step 10: Train DLRM Model
 
@@ -225,15 +245,20 @@ rec train-dlrm \
   --workspace ./workspace \
   --epochs 15 \
   --batch-size 1024 \
-  --embedding-dim 64 \
-  --mlp-layers "256,128,64" \
   --gpu
 ```
 
-Trains Deep Learning Recommendation Model with sparse embeddings.
+Trains Deep Learning Recommendation Model with sparse embeddings and feature interactions.
+
+**Architecture:**
+- **Dense Arch**: MLP for continuous features
+- **Sparse Arch**: Embedding tables for categorical features
+- **Interaction Layer**: Dot product / outer product feature crosses
+- **Prediction Head**: MLP with sigmoid output
 
 **Output:**
-- `workspace/models/dlrm.pt`
+- `workspace/models/dlrm/dlrm.pt`
+- `workspace/models/dlrm/config.json`
 
 ### Step 11: Build Vector Index
 
@@ -395,11 +420,15 @@ workspace/
 │   ├── item_features.parquet
 │   └── interaction_features.parquet
 ├── models/
-│   ├── retrieval_user_tower.pt
-│   ├── retrieval_item_tower.pt
-│   ├── retrieval_candidate_tower.pt
-│   ├── ranker.pt
-│   └── dlrm.pt
+│   ├── retrieval/
+│   │   ├── three_tower.pt
+│   │   └── config.json
+│   ├── ranker/
+│   │   ├── ranker.pt
+│   │   └── config.json
+│   └── dlrm/
+│       ├── dlrm.pt
+│       └── config.json
 ├── indices/
 │   ├── item_index.faiss
 │   ├── user_index.faiss
@@ -407,8 +436,13 @@ workspace/
 ├── reports/
 │   ├── evaluation_report.json
 │   └── training_logs.json
-└── logs/
-    └── rec_engine.log
+├── logs/
+│   ├── rec_engine.log
+│   ├── retrieval/
+│   ├── ranker/
+│   └── dlrm/
+└── processed/
+    └── features.parquet
 ```
 
 ## 🔧 Advanced Configuration
