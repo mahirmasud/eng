@@ -1,0 +1,2 @@
+[console_scripts]
+rec = rec.cli.main:cli
