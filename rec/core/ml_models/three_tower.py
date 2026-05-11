@@ -32,12 +32,14 @@ class UserTower(nn.Module):
         hidden_layers: List[int] = [512, 256, 128],
         dropout: float = 0.1,
         activation: str = "relu",
-        use_text_embeddings: bool = True,
+        use_text_embeddings: bool = False,
+        use_id_embedding: bool = False,
     ):
         super().__init__()
         
         self.embedding_dim = embedding_dim
         self.use_text_embeddings = use_text_embeddings
+        self.use_id_embedding = use_id_embedding
         
         # Text embedding model for categorical features
         if use_text_embeddings:
@@ -48,9 +50,13 @@ class UserTower(nn.Module):
         else:
             text_embed_dim = 0
             
-        # Calculate total input dimension
-        categorical_embed_dim = 64  # For ID embeddings
-        self.user_id_embedding = nn.Embedding(100000, categorical_embed_dim)
+        # ID embedding (optional — only included when use_id_embedding=True)
+        categorical_embed_dim = 64
+        if use_id_embedding:
+            self.user_id_embedding = nn.Embedding(100000, categorical_embed_dim)
+        else:
+            self.user_id_embedding = None
+            categorical_embed_dim = 0
         
         total_input_dim = user_feature_dim + categorical_embed_dim + text_embed_dim
         
@@ -100,8 +106,8 @@ class UserTower(nn.Module):
         """
         components = [user_features]
         
-        # Add user ID embedding
-        if user_ids is not None:
+        # Add user ID embedding (only when enabled at build time)
+        if self.use_id_embedding and user_ids is not None:
             user_id_emb = self.user_id_embedding(user_ids)
             components.append(user_id_emb)
             
@@ -137,12 +143,14 @@ class ItemTower(nn.Module):
         hidden_layers: List[int] = [512, 256, 128],
         dropout: float = 0.1,
         activation: str = "relu",
-        use_text_embeddings: bool = True,
+        use_text_embeddings: bool = False,
+        use_id_embedding: bool = False,
     ):
         super().__init__()
         
         self.embedding_dim = embedding_dim
         self.use_text_embeddings = use_text_embeddings
+        self.use_id_embedding = use_id_embedding
         
         # Text embedding model for item titles/descriptions
         if use_text_embeddings:
@@ -153,9 +161,13 @@ class ItemTower(nn.Module):
         else:
             text_embed_dim = 0
             
-        # Item ID embedding
+        # Item ID embedding (optional — only included when use_id_embedding=True)
         categorical_embed_dim = 64
-        self.item_id_embedding = nn.Embedding(100000, categorical_embed_dim)
+        if use_id_embedding:
+            self.item_id_embedding = nn.Embedding(100000, categorical_embed_dim)
+        else:
+            self.item_id_embedding = None
+            categorical_embed_dim = 0
         
         total_input_dim = item_feature_dim + categorical_embed_dim + text_embed_dim
         
@@ -205,8 +217,8 @@ class ItemTower(nn.Module):
         """
         components = [item_features]
         
-        # Add item ID embedding
-        if item_ids is not None:
+        # Add item ID embedding (only when enabled at build time)
+        if self.use_id_embedding and item_ids is not None:
             item_id_emb = self.item_id_embedding(item_ids)
             components.append(item_id_emb)
             
