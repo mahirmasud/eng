@@ -376,7 +376,7 @@ class TrainingPipeline:
         # Prepare positive/negative pairs for pairwise ranking
         if target_col:
             ratings = data[target_col].values
-            positive_mask = ratings > ratings.median()
+            positive_mask = ratings > np.median(ratings)
             negative_mask = ~positive_mask
             
             positive_features = features[positive_mask]
